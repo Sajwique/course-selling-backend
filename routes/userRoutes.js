@@ -1,14 +1,17 @@
 const { Router } = require("express");
-const { signup, signin } = require("../controller/userController.js");
+const {
+  signup,
+  signin,
+  checkUserPurchaseCouse,
+} = require("../controller/userController.js");
+
+const { checkToken } = require("../middleware/checkToken.js");
+
 const userRouter = Router();
 
 userRouter.post("/signup", signup);
 userRouter.post("/signin", signin);
-userRouter.post("/purchase", (req, res) => {
-  res.json({
-    message: "user signup endpoint",
-  });
-});
+userRouter.post("/user/course", checkToken, checkUserPurchaseCouse);
 
 module.exports = {
   userRouter: userRouter,

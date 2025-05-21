@@ -122,7 +122,21 @@ const signin = async (req, res) => {
   }
 };
 
+const checkUserPurchaseCouse = async (req, res) => {
+  try {
+    res.json({
+      message: "successfully",
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(403).json({
+      message: e.message,
+    });
+  }
+};
+
 module.exports = {
   signup: signup,
   signin: signin,
+  checkUserPurchaseCouse: checkUserPurchaseCouse,
 };
