@@ -19,7 +19,12 @@ const courseSchema = new mongoose.Schema(
       type: String,
     },
     course_review: {
+      //need to work linke comment box
       type: String,
+    },
+    admin_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
     },
     course_tags: [String],
     price: {

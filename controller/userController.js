@@ -124,8 +124,9 @@ const signin = async (req, res) => {
 
 const checkUserPurchaseCouse = async (req, res) => {
   try {
+    const userEmail = req.body.custome_data;
     res.json({
-      message: "successfully",
+      message: "padding routes",
     });
   } catch (e) {
     console.log(e);

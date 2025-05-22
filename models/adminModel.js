@@ -8,6 +8,7 @@ const adminSchema = new mongoose.Schema(
     last_name: {
       type: String,
     },
+    token: { type: String },
     email: {
       type: String,
       required: true,
@@ -33,3 +34,9 @@ const adminSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+const AdminModel = mongoose.model("Admin", adminSchema);
+
+module.exports = {
+  AdminModel: AdminModel,
+};
