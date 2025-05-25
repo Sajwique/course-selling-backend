@@ -3,18 +3,18 @@ const { UserModel } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const reqSchema = z.object({
+  email: z
+    .string()
+    .email()
+    .regex(
+      /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_'+\-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i
+    ),
+  password: z.string().min(6),
+});
+
 const signup = async (req, res) => {
   try {
-    const reqSchema = z.object({
-      email: z
-        .string()
-        .email()
-        .regex(
-          /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_'+\-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i
-        ),
-      password: z.string().min(6),
-    });
-
     const reqData = reqSchema.safeParse(req.body);
 
     if (!reqData.success) {
@@ -58,11 +58,6 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
   try {
-    const reqSchema = z.object({
-      email: z.string().email(),
-      password: z.string().min(6),
-    });
-
     const reqData = reqSchema.safeParse(req.body);
 
     if (!reqData.success) {
@@ -113,6 +108,44 @@ const signin = async (req, res) => {
     res.status(200).json({
       message: "signin successfully",
       token,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      message: e.message,
+    });
+  }
+};
+
+const userProfileUpdate = async (req, res) => {
+  try {
+    const updateProfileSchema = z.object({
+      first_name: z.string().optional(),
+      last_name: z.string().optional(),
+      bio: z.string().optional(),
+      address: z.string().optional(),
+      profile_url: z.string().optional(),
+    });
+
+    const updateProfileReqData = updateProfileSchema.safeParse(req.body);
+
+    if (!updateProfileReqData.success) {
+      res.status(204).json({
+        message: "please provide the right data",
+        error: updateProfileReqData.error,
+      });
+      return;
+    }
+
+    const email = req.body.custome_data;
+
+    await UserModel.findOneAndUpdate(
+      { email: email },
+      updateProfileReqData.data,
+      { upsert: true }
+    );
+    res.status(200).json({
+      message: "user profile update successfully",
     });
   } catch (e) {
     console.log(e);

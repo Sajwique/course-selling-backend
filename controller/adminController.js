@@ -95,7 +95,46 @@ const adminSignin = async (req, res) => {
   }
 };
 
+const updateProfile = async (req, res) => {
+  try {
+    const updateAdminSchema = z.object({
+      first_name: z.string().optional(),
+      last_name: z.string().optional(),
+      bio: z.string().optional(),
+      address: z.string().optional(),
+      profile_url: z.string().optional(),
+    });
+
+    const updateAdminReqData = updateAdminSchema.safeParse(req.body);
+
+    if (!updateAdminReqData.success) {
+      res.status(403).json({
+        message: "please provide correct data",
+        error: updateAdminReqData.error,
+      });
+      return;
+    }
+
+    const email = req.body.custome_data;
+    const id = req.body.admin_id;
+
+    await AdminModel.findByIdAndUpdate({ _id: id }, updateAdminReqData.data, {
+      upsert: true,
+    });
+    res.status(200).json({
+      message: "profile update successfully",
+    });
+  } catch (e) {
+    console.log(e);
+    res.json(403).json({
+      message: e.message,
+      error: true,
+    });
+  }
+};
+
 module.exports = {
   adminSignup: adminSignup,
   adminSignin: adminSignin,
+  updateProfile: updateProfile,
 };

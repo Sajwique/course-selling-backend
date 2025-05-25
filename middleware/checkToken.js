@@ -1,8 +1,16 @@
 const jwt = require("jsonwebtoken");
 
-const checkToken = async (req, res, next) => {
+const checkTokenMiddleware = async (req, res, next) => {
   try {
-    const headers = req.headers.authorization.split(" ");
+    const headers = req.headers.authorization?.split(" ");
+    // console.log("headers :", headers);
+
+    if (!headers) {
+      res.status(403).json({
+        message: "Please provide the access token",
+      });
+      return;
+    }
     const token = headers[1];
 
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
@@ -22,5 +30,5 @@ const checkToken = async (req, res, next) => {
 };
 
 module.exports = {
-  checkToken: checkToken,
+  checkTokenMiddleware: checkTokenMiddleware,
 };

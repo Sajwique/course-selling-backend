@@ -8,6 +8,12 @@ const adminSchema = new mongoose.Schema(
     last_name: {
       type: String,
     },
+    bio: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
     token: { type: String },
     email: {
       type: String,
@@ -21,12 +27,12 @@ const adminSchema = new mongoose.Schema(
     profile_url: {
       type: String,
     },
-    course_create: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
-      },
-    ],
+    // course_create: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Course",
+    //   },
+    // ],
     isSuperAdmin: {
       type: Boolean,
       default: false,

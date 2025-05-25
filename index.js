@@ -5,7 +5,7 @@ const { courseRouter } = require("./routes/courseRoutes.js");
 const { userRouter } = require("./routes/userRoutes.js");
 const { adminRouter } = require("./routes/adminRoutes.js");
 const { rateLimit } = require("express-rate-limit");
-const { checkToken } = require("./middleware/checkToken.js");
+const { checkTokenMiddleware } = require("./middleware/checkToken.js");
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.get("/test", (req, res) => {
 
 app.use("/api/v1", userRouter);
 app.use("/api/v1", adminRouter);
-app.use(checkToken);
+app.use(checkTokenMiddleware);
 app.use("/api/v1", courseRouter);
 
 app.listen(3000, async () => {
