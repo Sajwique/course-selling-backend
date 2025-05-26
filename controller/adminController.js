@@ -98,11 +98,11 @@ const adminSignin = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const updateAdminSchema = z.object({
-      first_name: z.string().optional(),
-      last_name: z.string().optional(),
+      firstName: z.string().optional(),
+      lastName: z.string().optional(),
       bio: z.string().optional(),
       address: z.string().optional(),
-      profile_url: z.string().optional(),
+      profileURL: z.string().optional(),
     });
 
     const updateAdminReqData = updateAdminSchema.safeParse(req.body);

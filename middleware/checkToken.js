@@ -2,30 +2,23 @@ const jwt = require("jsonwebtoken");
 
 const checkTokenMiddleware = async (req, res, next) => {
   try {
-    const headers = req.headers.authorization?.split(" ");
-    // console.log("headers :", headers);
-
-    if (!headers) {
-      res.status(403).json({
-        message: "Please provide the access token",
-      });
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      res.status(401).json({ message: "Access token required" });
       return;
     }
-    const token = headers[1];
+
+    const token = authHeader.split(" ")[1];
 
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-    req.body.custome_data = decoded?.email;
-    if (decoded.id) {
-      req.body.admin_id = decoded.id;
-      next();
-      return;
-    }
+    req.user = {
+      email: decoded.email,
+      id: decoded.id,
+    };
     next();
   } catch (e) {
-    console.log(e.message);
-    res.status(403).json({
-      message: e.message,
-    });
+    console.error("JWT Error:", e.message);
+    res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 

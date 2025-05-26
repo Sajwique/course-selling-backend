@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const adminSchema = new mongoose.Schema(
   {
-    first_name: {
+    firstName: {
       type: String,
     },
-    last_name: {
+    lastName: {
       type: String,
     },
     bio: {
@@ -19,23 +19,29 @@ const adminSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
     },
     password: {
       type: String,
       required: true,
     },
-    profile_url: {
+    profileURL: {
       type: String,
     },
-    // course_create: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Course",
-    //   },
-    // ],
+    coursesCreated: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+      },
+    ],
     isSuperAdmin: {
       type: Boolean,
       default: false,
+    },
+    role: {
+      type: String,
+      enum: ["admin", "superadmin"],
+      default: "admin",
     },
   },
   { timestamps: true }

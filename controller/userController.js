@@ -30,7 +30,7 @@ const signup = async (req, res) => {
 
     console.log("isUserPresent", isUserPersent);
     if (isUserPersent) {
-      res.status(200).json({
+      res.status(409).json({
         message: "user already exits",
       });
       return;
@@ -96,6 +96,8 @@ const signin = async (req, res) => {
     const token = jwt.sign(
       {
         email: isUserPresent.email,
+        id: isUserPresent._id,
+        role: "user",
       },
       process.env.JWT_SECRET
       //   { expiresIn: 60 * 60 }
@@ -106,8 +108,12 @@ const signin = async (req, res) => {
       { upsert: true }
     );
     res.status(200).json({
-      message: "signin successfully",
+      message: "Signin successful",
       token,
+      user: {
+        id: isUserPresent._id,
+        email: isUserPresent.email,
+      },
     });
   } catch (e) {
     console.log(e);
@@ -120,19 +126,18 @@ const signin = async (req, res) => {
 const userProfileUpdate = async (req, res) => {
   try {
     const updateProfileSchema = z.object({
-      first_name: z.string().optional(),
-      last_name: z.string().optional(),
+      firstName: z.string().optional(),
+      lastName: z.string().optional(),
       bio: z.string().optional(),
       address: z.string().optional(),
-      profile_url: z.string().optional(),
+      profileURL: z.string().optional(),
     });
 
     const updateProfileReqData = updateProfileSchema.safeParse(req.body);
 
     if (!updateProfileReqData.success) {
-      res.status(204).json({
-        message: "please provide the right data",
-        error: updateProfileReqData.error,
+      res.status(400).json({
+        message: "Invalid profile data",
       });
       return;
     }
@@ -155,7 +160,7 @@ const userProfileUpdate = async (req, res) => {
   }
 };
 
-const checkUserPurchaseCouse = async (req, res) => {
+const checkUserPurchaseCourse = async (req, res) => {
   try {
     const userEmail = req.body.custome_data;
     res.json({
@@ -172,5 +177,5 @@ const checkUserPurchaseCouse = async (req, res) => {
 module.exports = {
   signup: signup,
   signin: signin,
-  checkUserPurchaseCouse: checkUserPurchaseCouse,
+  checkUserPurchaseCourse: checkUserPurchaseCourse,
 };

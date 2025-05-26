@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema(
   {
-    first_name: {
+    firstName: {
       type: String,
     },
-    last_name: {
+    lastName: {
       type: String,
     },
     token: {
@@ -15,6 +15,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
     },
     bio: {
       type: String,
@@ -26,19 +27,19 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    profile_url: {
+    profileUrl: {
       type: String,
     },
-    courses_purchase: [
+    coursePurchases: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",
       },
     ],
-    transaction_id: [
+    transactions: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "transaction",
+        ref: "Transaction",
       },
     ],
   },
