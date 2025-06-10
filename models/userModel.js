@@ -8,15 +8,24 @@ const userSchema = mongoose.Schema(
     lastName: {
       type: String,
     },
-    token: {
-      type: String,
-    },
     email: {
       type: String,
       required: true,
       unique: true,
       match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
     },
+    lastLogin: {
+      type: Date,
+      default: Date.now(),
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    resetPasswordToken: String,
+    resetPasswordExpiresAt: Date,
+    verificationToken: String,
+    verificationTokenExpiresAt: Date,
     bio: {
       type: String,
     },
